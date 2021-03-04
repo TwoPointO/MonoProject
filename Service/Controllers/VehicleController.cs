@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using API.Helpers;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Service.DTOs;
 using Service.Extensions;
 using Service.Interfaces;
 using Service.Models;
@@ -43,9 +44,11 @@ namespace Service.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<VehicleMake>> CreateVehicleMake(VehicleMake vehicleMake)
+        public async Task<ActionResult<VehicleMake>> CreateVehicleMake(VehicleMakeDto vehicleMakeDto)
         {
-            if (vehicleMake == null) return BadRequest();
+            if (vehicleMakeDto == null) return BadRequest();
+
+            var vehicleMake = _mapper.Map<VehicleMake>(vehicleMakeDto);
 
             _unitOfWork.VehicleService.CreateVehicleMakeAsync(vehicleMake);
 
@@ -56,9 +59,11 @@ namespace Service.Controllers
 
         
         [HttpPost]
-        public async Task<ActionResult<VehicleModel>> CreateVehicleModel(VehicleModel vehicleModel)
+        public async Task<ActionResult<VehicleModel>> CreateVehicleModel(VehicleModelDto vehicleModelDto)
         {
-            if (vehicleModel == null) return BadRequest();
+            if (vehicleModelDto == null) return BadRequest();
+
+            var vehicleModel = _mapper.Map<VehicleModel>(vehicleModelDto);
 
             _unitOfWork.VehicleService.CreateVehicleModelAsync(vehicleModel);
 
@@ -87,11 +92,11 @@ namespace Service.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateVehicleMake(VehicleMake vehicleMake)
+        public async Task<ActionResult> UpdateVehicleMake(VehicleMakeDto vehicleMakeDto)
         {
-            var make = await _unitOfWork.VehicleService.GetVehicleMakeByNameAsync(vehicleMake.Name);
+            var make = await _unitOfWork.VehicleService.GetVehicleMakeByNameAsync(vehicleMakeDto.Name);
 
-            //_mapper.Map(vehicleMakeUpdateDto, make);
+            _mapper.Map(vehicleMakeDto, make);
 
             _unitOfWork.VehicleService.Update(make);
 
@@ -101,11 +106,11 @@ namespace Service.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateVehicleModel(VehicleModel vehicleModel)
+        public async Task<ActionResult> UpdateVehicleModel(VehicleModelDto vehicleModelDto)
         {
-            var model = await _unitOfWork.VehicleService.GetVehicleModelByNameAsync(vehicleModel.Name);
+            var model = await _unitOfWork.VehicleService.GetVehicleModelByNameAsync(vehicleModelDto.Name);
 
-            //_mapper.Map(vehicleModelUpdateDto, model);
+            _mapper.Map(vehicleModelDto, model);
 
             _unitOfWork.VehicleService.Update(model);
 
